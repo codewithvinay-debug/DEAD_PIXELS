@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CYBER BREACH // CYBER INTELLIGENCE ESCAPE ROOM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700;800&family=Orbitron:wght@600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      position: relative;
+      isolation: isolate;
+      margin: 0;
+      min-height: 100vh;
+      background-color: #050811;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .operations-room-scene {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 28%, rgba(87, 128, 145, 0.16), transparent 58%),
+        linear-gradient(180deg, #15212a 0%, #0a1118 52%, #030609 100%);
+    }
+    .operations-room-scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 0 56%, rgba(0, 0, 0, 0.38) 74%, rgba(0, 0, 0, 0.78) 100%),
+        radial-gradient(ellipse at 50% 48%, rgba(25, 55, 67, 0.2), transparent 62%);
+    }
+    .operations-room-scene::after {
+      content: "";
+      position: absolute;
+      left: -12%;
+      right: -12%;
+      bottom: -34%;
+      height: 66%;
+      transform: perspective(620px) rotateX(58deg);
+      transform-origin: center top;
+      background:
+        linear-gradient(rgba(13, 30, 39, 0.65), rgba(2, 5, 8, 0.9)),
+        repeating-linear-gradient(90deg, transparent 0 9.8%, rgba(70, 116, 132, 0.14) 10%, transparent 10.2%),
+        repeating-linear-gradient(0deg, transparent 0 17%, rgba(70, 116, 132, 0.12) 17.2%, transparent 17.5%);
+    }
+    .operations-screen-bank {
+      position: absolute;
+      top: 19vh;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: clamp(230px, 23vw, 360px);
+      height: 31vh;
+      min-height: 190px;
+      padding: 9px;
+      border: 1px solid rgba(135, 164, 174, 0.24);
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(31, 43, 49, 0.92), rgba(8, 13, 18, 0.98));
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.65), inset 0 1px rgba(210, 230, 235, 0.12);
+      opacity: 0.56;
+    }
+    .operations-screen-bank-left {
+      left: -3vw;
+      transform: perspective(900px) rotateY(8deg);
+    }
+    .operations-screen-bank-right {
+      right: -3vw;
+      transform: perspective(900px) rotateY(-8deg);
+    }
+    .operations-screen-bank span {
+      border: 1px solid rgba(73, 118, 130, 0.28);
+      border-radius: 3px;
+      background:
+        linear-gradient(155deg, transparent 44%, rgba(0, 221, 204, 0.34) 45%, transparent 47%),
+        repeating-linear-gradient(0deg, transparent 0 12px, rgba(90, 139, 151, 0.12) 13px, transparent 14px),
+        radial-gradient(ellipse at 72% 34%, rgba(35, 91, 103, 0.38), transparent 60%),
+        #071117;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6);
+    }
+    .operations-console {
+      position: absolute;
+      left: 22%;
+      right: 22%;
+      bottom: -5vh;
+      height: 17vh;
+      transform: perspective(800px) rotateX(9deg);
+      border: 1px solid rgba(103, 135, 148, 0.2);
+      border-radius: 14px 14px 0 0;
+      background:
+        linear-gradient(180deg, rgba(45, 59, 65, 0.58), rgba(7, 11, 15, 0.96)),
+        repeating-linear-gradient(90deg, transparent 0 8%, rgba(95, 140, 151, 0.08) 8.2%, transparent 8.5%);
+      box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.42), inset 0 1px rgba(190, 218, 223, 0.12);
+      opacity: 0.48;
+    }
+    @media (max-width: 640px) {
+      .operations-screen-bank {
+        top: 23vh;
+        width: 43vw;
+        height: 20vh;
+        min-height: 140px;
+        gap: 5px;
+        padding: 6px;
+        opacity: 0.32;
+      }
+      .operations-console {
+        left: 7%;
+        right: 7%;
+        height: 12vh;
+      }
+    }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+
+    .cyber-card {
+      background: rgba(11, 18, 34, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), inset 0 0 24px rgba(56, 189, 248, 0.04);
+    }
+    .neon-cyan {
+      color: #00f0ff;
+      text-shadow: 0 0 14px rgba(0, 240, 255, 0.55);
+    }
+    .neon-green {
+      color: #00ff88;
+      text-shadow: 0 0 14px rgba(0, 255, 136, 0.5);
+    }
+    .scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.16) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Hidden clue text */
+    .stealth-buffer {
+      background-color: transparent;
+      color: transparent;
+      border: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .stealth-buffer::selection, .stealth-buffer *::selection {
+      background: #00f0ff;
+      color: #020617;
+    }
+
+    /* Level 04 180-Degree Inversion */
+    .inverted-stage {
+      transform: rotate(180deg);
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .upright-stage {
+      transform: rotate(0deg);
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes slide-up-entry {
+      from { opacity: 0; transform: translateY(48px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-up-entry {
+      animation: slide-up-entry 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    /* Custom Right-Click Menu for Level 04 */
+    #customContext {
+      position: fixed;
+      display: none;
+      z-index: 2000;
+      min-width: 230px;
+      background: #0b1222;
+      border: 1px solid #00f0ff;
+      border-radius: 10px;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+  <div class="operations-room-scene" aria-hidden="true">
+    <div class="operations-screen-bank operations-screen-bank-left"><span></span><span></span><span></span><span></span></div>
+    <div class="operations-screen-bank operations-screen-bank-right"><span></span><span></span><span></span><span></span></div>
+    <div class="operations-console"></div>
+  </div>
+  <div class="fixed inset-0 scanlines z-50"></div>
+
+  <!-- SIMULATED CYBER-BROWSER CHROME & URL ADDRESS BAR -->
+  <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Traffic Lights + Website Logo -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+          <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+        </div>
+        <button onclick="showLobby()" class="font-orbitron font-black text-xs sm:text-sm tracking-wider neon-cyan hover:opacity-80 transition cursor-pointer">
+          CYBER BREACH
+        </button>
+      </div>
+
+      <!-- Interactive Address Bar -->
+      <div class="flex-1 min-w-[260px] max-w-2xl flex items-center bg-slate-900 border border-cyan-400/60 rounded-lg px-3 py-1.5 shadow-[0_0_16px_rgba(0,240,255,0.14)]">
+        <span class="text-emerald-400 font-mono-code text-xs mr-1.5 select-none">🔒</span>
+        <span id="urlPrefix" class="text-emerald-400 font-mono-code text-xs sm:text-sm whitespace-nowrap select-none">https://nexus-intel.sec/lobby</span>
+        <input
+          type="text"
+          id="addressInput"
+          placeholder=""
+          autocomplete="off"
+          class="flex-1 bg-transparent border-none outline-none text-white font-mono-code text-xs sm:text-sm font-bold tracking-wide ml-0.5"
+        />
+        <button
+          onclick="submitAddressBar()"
+          class="ml-2 px-3 py-1 rounded bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-[11px] tracking-wider cursor-pointer transition"
+        >
+          GO →
+        </button>
+      </div>
+
+      <!-- Live Telemetry HUD Controls -->
+      <div class="flex items-center gap-2 font-mono-code text-xs">
+        <div id="timerBadge" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-emerald-400 font-bold">
+          00:00
+        </div>
+        <div id="demotionBadge" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 font-bold">
+          DEMOTIONS: 0
+        </div>
+        <button
+          id="audioToggleBtn"
+          onclick="toggleAudio()"
+          class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-cyan-300 hover:border-cyan-400 cursor-pointer transition"
+          title="Toggle Sound Effects"
+        >
+          SFX: ON
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LEVEL SELECTOR & PROGRESS TRACKER BAR -->
+  <nav id="stepperNav" class="hidden border-b border-slate-800/80 bg-slate-950/60 px-4 py-2.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-center flex-wrap gap-1.5" id="stepper"></div>
+  </nav>
+
+  <!-- MAIN VIEWPORT AREA -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-8">
+    <!-- Dynamic View Container (Lobby or Active Level) -->
+    <div id="appRoot"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-900 py-4 px-6 text-center text-xs text-slate-500 font-mono-code">
+    CYBER BREACH // 6-LAYER CYBER INTELLIGENCE ESCAPE SIMULATION • USE THE TOP ADDRESS BAR FOR ROUTE PASSKEYS
+  </footer>
+
+  <!-- CUSTOM RIGHT-CLICK CONTEXT MENU (LEVEL 04) -->
+  <div id="customContext">
+    <div onclick="contextInspect()" class="px-4 py-2.5 text-xs font-mono-code text-slate-300 hover:bg-cyan-400 hover:text-slate-950 border-b border-slate-800 cursor-pointer">
+      &lt;/&gt; Inspect Element
+    </div>
+    <div onclick="breakSystemLoop()" class="px-4 py-2.5 text-xs font-mono-code text-emerald-400 font-bold hover:bg-emerald-400 hover:text-slate-950 border-b border-slate-800 cursor-pointer">
+      ⚡ Break the System Loop
+    </div>
+    <div onclick="contextReload()" class="px-4 py-2.5 text-xs font-mono-code text-slate-300 hover:bg-cyan-400 hover:text-slate-950 cursor-pointer">
+      ↻ Reload Frame
+    </div>
+  </div>
+
+  <!-- MODAL POPUP -->
+  <div id="modalBackdrop" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div id="modalBox" class="cyber-card rounded-2xl max-w-lg w-full p-6 border-2 border-cyan-400/60"></div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-xl bg-slate-900 border-l-4 border-cyan-400 px-4 py-3 text-xs sm:text-sm font-mono-code text-white shadow-2xl"></div>
+
+  <script>
+    // =========================================================================
+    // 1. WEB AUDIO API SYNTHESIZER (Zero External Audio Dependencies)
+    // =========================================================================
+    const SFX = {
+      ctx: null,
+      muted: false,
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      },
+      playTone(freqs, type = 'sine', duration = 0.18, vol = 0.08) {
+        if (this.muted) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        freqs.forEach((f, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(f, now + idx * 0.08);
+          gain.gain.setValueAtTime(vol, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + duration + 0.02);
+        });
+      },
+      click() { this.playTone([620], 'triangle', 0.07, 0.05); },
+      success() { this.playTone([523.25, 659.25, 783.99, 1046.5], 'triangle', 0.22, 0.08); },
+      error() { this.playTone([180, 135], 'sawtooth', 0.24, 0.09); },
+      synthEasterEgg() { this.playTone([261.63, 329.63, 392.0, 523.25, 659.25], 'sawtooth', 0.28, 0.07); }
+    };
+
+    function toggleAudio() {
+      SFX.muted = !SFX.muted;
+      document.getElementById('audioToggleBtn').textContent = SFX.muted ? 'SFX: OFF' : 'SFX: ON';
+      if (!SFX.muted) SFX.click();
+    }
+
+    // =========================================================================
+    // 2. GAME STATE & MISSION CONFIGURATION
+    // =========================================================================
+    const STATE = {
+      view: 'LOBBY', // 'LOBBY' | 'GAME'
+      level: 0,
+      highestUnlocked: 0,
+      demotions: 0,
+      seconds: 0,
+      timerRunning: false,
+      l1Phase1: false,
+      l1Phase2: false,
+      l3Unlocked: false,
+      l4LoopBroken: false,
+      l5CipherDone: false
+    };
+
+    const LEVELS_META = [
+      { id: 0, short: "L00: Orientation", title: "Hidden Boot Transmission", type: "Hidden Page Inspection", submit: "In-Page Modal", penalty: "None" },
+      { id: 1, short: "L01: Telemetry", title: "Algorithmic Telemetry Engine", type: "Python + Base-2 + Matrix", submit: "Address Bar", penalty: "None" },
+      { id: 2, short: "L02: Memory", title: "Machine Memory Archive", type: "Stealth Masking + ASCII", submit: "Address Bar", penalty: "None" },
+      { id: 3, short: "L03: DOM Auth", title: "System Authentication Vault", type: "HTML Comment Inspection", submit: "Address Bar", penalty: "RESET TO L01" },
+      { id: 4, short: "L04: Inversion", title: "The Interface Lies", type: "180° Screen + Context Override", submit: "Address Bar", penalty: "None" },
+      { id: 5, short: "L05: Intercept", title: "Encrypted Tactical Intercept", type: "Caesar Cipher + Letter Sum", submit: "Address Bar", penalty: "RESET TO L01" }
+    ];
+
+    // Live Mission Clock
+    setInterval(() => {
+      if (STATE.timerRunning && STATE.level < 6) {
+        STATE.seconds++;
+        const m = String(Math.floor(STATE.seconds / 60)).padStart(2, '0');
+        const s = String(STATE.seconds % 60).padStart(2, '0');
+        document.getElementById('timerBadge').textContent = `${m}:${s}`;
+      }
+    }, 1000);
+
+    // =========================================================================
+    // 3. NAVIGATION, TOASTS, MODALS & DEMOTION ENGINE
+    // =========================================================================
+    function showToast(msg, borderColor = '#00f0ff') {
+      const t = document.getElementById('toast');
+      t.style.borderLeftColor = borderColor;
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3600);
+    }
+
+    function showModal(html) {
+      document.getElementById('modalBox').innerHTML = html;
+      const mb = document.getElementById('modalBackdrop');
+      mb.classList.remove('hidden');
+      mb.classList.add('flex');
+    }
+
+    function closeModal() {
+      const mb = document.getElementById('modalBackdrop');
+      mb.classList.add('hidden');
+      mb.classList.remove('flex');
+    }
+
+    function triggerDemotion(reason) {
+      SFX.error();
+      STATE.demotions++;
+      const badge = document.getElementById('demotionBadge');
+      badge.textContent = `DEMOTIONS: ${STATE.demotions}`;
+      badge.className = 'px-2.5 py-1.5 rounded-lg bg-rose-950/80 border border-rose-500 text-rose-300 font-bold';
+
+      showModal(`
+        <div class="text-rose-400 font-mono-code text-xs tracking-widest uppercase mb-1">⚠ INTRUSION COUNTERMEASURE TRIGGERED</div>
+        <h2 class="font-orbitron text-xl font-black text-white mb-3">CLEARANCE DEMOTED TO LEVEL 01</h2>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3">${reason}</p>
+        <p class="text-xs font-mono-code text-amber-300 mb-5">Security Protocol: Incorrect verification on high-stakes levels resets progress back to Level 01.</p>
+        <button onclick="closeModal(); goToLevel(1);" class="w-full py-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-orbitron font-bold text-xs tracking-widest uppercase cursor-pointer">
+          REBOOT AT LEVEL 01
+        </button>
+      `);
+    }
+
+    function showLobby() {
+      SFX.click();
+      STATE.view = 'LOBBY';
+      STATE.timerRunning = false;
+      document.getElementById('stepperNav').classList.add('hidden');
+      document.getElementById('urlPrefix').textContent = 'https://nexus-intel.sec/lobby';
+      document.getElementById('addressInput').value = '';
+      document.getElementById('addressInput').placeholder = '';
+      renderLobby();
+    }
+
+    function startMission(targetLevel = 0) {
+      if (targetLevel === 0) {
+        STATE.seconds = 0;
+        STATE.demotions = 0;
+        STATE.highestUnlocked = 0;
+        document.getElementById('timerBadge').textContent = '00:00';
+        document.getElementById('demotionBadge').textContent = 'DEMOTIONS: 0';
+        document.getElementById('demotionBadge').className = 'px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 font-bold';
+      }
+      SFX.init();
+      SFX.click();
+      STATE.view = 'GAME';
+      STATE.timerRunning = true;
+      document.getElementById('stepperNav').classList.remove('hidden');
+      goToLevel(targetLevel);
+    }
+
+    function goToLevel(lvl) {
+      STATE.view = 'GAME';
+      STATE.level = lvl;
+      if (lvl > STATE.highestUnlocked && lvl <= 5) {
+        STATE.highestUnlocked = lvl;
+      }
+
+      // Reset per-level transient flags
+      STATE.l1Phase1 = false;
+      STATE.l1Phase2 = false;
+      STATE.l3Unlocked = false;
+      STATE.l4LoopBroken = false;
+      STATE.l5CipherDone = false;
+
+      const addrInput = document.getElementById('addressInput');
+      addrInput.value = '';
+
+      if (lvl <= 5) {
+        document.getElementById('urlPrefix').textContent = `https://nexus-intel.sec/level/${lvl}/`;
+        addrInput.placeholder = lvl === 0 ? '' : 'type_passkey_and_press_enter';
+      } else {
+        document.getElementById('urlPrefix').textContent = `https://nexus-intel.sec/victory`;
+        addrInput.placeholder = 'clearance_granted';
+      }
+
+      renderStepper();
+      renderLevel();
+    }
+
+    function renderStepper() {
+      const el = document.getElementById('stepper');
+      el.innerHTML = LEVELS_META.map((item) => {
+        const isCurrent = item.id === STATE.level;
+        const isDone = item.id < STATE.level;
+        const canJump = item.id <= STATE.highestUnlocked;
+        let cls = 'px-2.5 py-1 rounded-md font-mono-code text-[11px] border transition ';
+        if (isCurrent) cls += 'bg-cyan-400/15 border-cyan-400 text-cyan-300 font-bold shadow-[0_0_10px_rgba(0,240,255,0.25)]';
+        else if (isDone) cls += 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/20 cursor-pointer';
+        else if (canJump) cls += 'bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400 cursor-pointer';
+        else cls += 'bg-slate-950 border-slate-800/80 text-slate-600 cursor-not-allowed';
+
+        return `<button ${canJump ? `onclick="SFX.click(); goToLevel(${item.id})"` : 'disabled'} class="${cls}">${item.short}</button>`;
+      }).join('');
+    }
+
+    // Simulated Browser Address Bar Router
+    document.getElementById('addressInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAddressBar();
+    });
+
+    function submitAddressBar() {
+      const raw = document.getElementById('addressInput').value.trim().toLowerCase();
+      if (raw === 'lobby' || raw === '/lobby') {
+        showLobby();
+        return;
+      }
+      if (STATE.view === 'LOBBY') {
+        startMission(0);
+        return;
+      }
+
+      const cleanKey = raw.split('/').pop();
+      const PASSKEYS = {
+        1: 'nova_prime',
+        2: '9_jolt_shade_0',
+        3: '256',
+        4: 'ram_rom',
+        5: '63'
+      };
+
+      if (STATE.level === 0) {
+        showToast("Level 00 requires the hidden boot key.", "#ffb800");
+        return;
+      }
+      if (cleanKey === PASSKEYS[STATE.level]) {
+        SFX.success();
+        showToast(`200 OK // ROUTE UNLOCKED: /level/${STATE.level}/${cleanKey}`, "#00ff88");
+        goToLevel(STATE.level + 1);
+      } else if (STATE.level === 3) {
+        triggerDemotion(`Incorrect route key for Level 03! The dossier answer is 256.`);
+      } else {
+        SFX.error();
+        showToast(`403 FORBIDDEN // INVALID KEY '${cleanKey || "EMPTY"}'`, "#ff3355");
+      }
+    }
+
+    // =========================================================================
+    // 4. LOBBY / LANDING PORTAL VIEW
+    // =========================================================================
+    function renderEntry() {
+      STATE.view = 'ENTRY';
+      STATE.timerRunning = false;
+      document.getElementById('stepperNav').classList.add('hidden');
+      document.getElementById('urlPrefix').textContent = 'https://nexus-intel.sec/entry';
+      document.getElementById('addressInput').value = '';
+      document.getElementById('addressInput').placeholder = '';
+      document.getElementById('appRoot').innerHTML = `
+        <section class="cyber-card slide-up-entry rounded-2xl p-8 sm:p-12 text-center border-t-2 border-cyan-400">
+          <div class="font-mono-code text-xs text-cyan-300 tracking-[0.3em] uppercase mb-4">Secure access // entry sequence</div>
+          <h1 class="font-orbitron text-4xl sm:text-6xl font-black neon-cyan mb-5">CYBER BREACH</h1>
+          <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-7">
+            Welcome to the cyber intelligence escape room. Enter the mission portal when ready.
+          </p>
+          <button onclick="showLobby()" class="px-10 py-5 rounded-2xl bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 text-slate-950 font-orbitron font-black text-lg sm:text-xl tracking-widest uppercase shadow-[0_0_35px_rgba(0,240,255,0.45)] hover:scale-105 hover:brightness-110 transition cursor-pointer">
+            ▶ PLAY THE PUZZLE GAME
+          </button>
+        </section>
+        <div class="fixed bottom-5 right-5 z-30 rounded-lg border border-cyan-300/70 bg-slate-950/90 px-4 py-2 font-orbitron text-base sm:text-lg font-bold tracking-wider text-cyan-100 shadow-[0_0_18px_rgba(0,240,255,0.3)]">BUILT BY DEAD PIXELS</div>
+      `;
+    }
+
+    function renderLobby() {
+      const root = document.getElementById('appRoot');
+      root.innerHTML = `
+        <div class="space-y-8">
+          <!-- Hero Mission Portal -->
+          <section class="cyber-card rounded-2xl p-6 sm:p-10 border-t-2 border-cyan-400 relative overflow-hidden">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 font-mono-code text-xs mb-4">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              CYBER INTELLIGENCE SIMULATION // 6 SECURITY LAYERS
+            </div>
+
+            <h1 class="font-orbitron text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+              CYBER <span class="neon-cyan">BREACH</span>
+            </h1>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl leading-relaxed mb-6">
+              Infiltrate the six-layer Nexus Mainframe in this browser-based cyber-intelligence escape room. Decode binary memory buffers, inspect client-side DOM comments, override an inverted interface, and solve the final intelligence intercept.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button onclick="startMission(0)" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 font-orbitron font-black text-sm tracking-widest uppercase shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:brightness-110 transition cursor-pointer">
+                INITIALIZE BREACH →
+              </button>
+              ${STATE.highestUnlocked > 0 ? `
+                <button onclick="startMission(${STATE.highestUnlocked})" class="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-400/60 text-cyan-300 font-orbitron font-bold text-xs tracking-wider uppercase transition cursor-pointer">
+                  RESUME AT LEVEL 0${STATE.highestUnlocked}
+                </button>
+              ` : ''}
+            </div>
+          </section>
+
+          <!-- Master Reference Matrix Table -->
+          <section class="cyber-card rounded-2xl p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 uppercase tracking-widest">OPERATIONAL ARCHITECTURE</div>
+                <h2 class="font-orbitron text-xl font-bold text-white">6-LAYER SECURITY MATRIX</h2>
+              </div>
+              <span class="font-mono-code text-xs text-slate-400">CLICK ANY UNLOCKED LAYER TO DEPLOY</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse font-mono-code text-xs">
+                <thead>
+                  <tr class="border-b border-slate-800 text-cyan-300">
+                    <th class="py-2.5 px-3">LAYER</th>
+                    <th class="py-2.5 px-3">PROTOCOL NAME</th>
+                    <th class="py-2.5 px-3">MECHANIC</th>
+                    <th class="py-2.5 px-3">SUBMISSION</th>
+                    <th class="py-2.5 px-3">PENALTY RISK</th>
+                    <th class="py-2.5 px-3 text-right">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/70">
+                  ${LEVELS_META.map(m => {
+                    const unlocked = m.id <= STATE.highestUnlocked;
+                    return `
+                      <tr class="hover:bg-slate-900/60 transition">
+                        <td class="py-3 px-3 font-bold text-white">L0${m.id}</td>
+                        <td class="py-3 px-3 text-slate-200">${m.title}</td>
+                        <td class="py-3 px-3 text-slate-400">${m.type}</td>
+                        <td class="py-3 px-3 text-cyan-300">${m.submit}</td>
+                        <td class="py-3 px-3 ${m.penalty !== 'None' ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${m.penalty}</td>
+                        <td class="py-3 px-3 text-right">
+                          <button
+                            onclick="startMission(${m.id})"
+                            class="px-3 py-1 rounded ${unlocked ? 'bg-cyan-500/20 border border-cyan-400 text-cyan-300 hover:bg-cyan-400 hover:text-slate-950' : 'bg-slate-900 border border-slate-700 text-slate-400 hover:border-cyan-400 hover:text-cyan-300'} font-bold cursor-pointer transition"
+                          >
+                            DEPLOY
+                          </button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 5. ALL 8 ESCAPE ROOM LEVELS + VICTORY RENDERER
+    // =========================================================================
+    function renderLevel() {
+      const root = document.getElementById('appRoot');
+
+      // LEVEL 00: ORIENTATION GATEWAY
+      if (STATE.level === 0) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 00 // ORIENTATION GATEWAY</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">Hidden Boot Transmission</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-mono-code text-xs">PENALTY RISK: NONE</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-5">
+              Inspect this page to find the hidden location of the boot key. [There is more than one clue in this page.]
+            </p>
+
+            <div class="stealth-buffer inline-block rounded-lg px-3 py-2 font-mono-code text-xs mb-4">DESTINATION: CONSOLE</div>
+
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 sm:p-6">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <input type="text" id="l0BootKeyInput" autocomplete="off" placeholder="Enter boot key..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 font-mono-code text-sm text-cyan-300 outline-none focus:border-cyan-400" onkeydown="if(event.key === 'Enter') authenticateL0();" />
+                <button onclick="authenticateL0()" class="px-6 py-3 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-black text-xs tracking-widest cursor-pointer transition">
+                  AUTHENTICATE
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        console.log("%c[NEXUS BOOT KEY]: WELCOME_TO_PUZZLE", "color: #00ff88; font-size: 16px; font-weight: bold;");
+      }
+
+      // LEVEL 01: ALGORITHMIC TELEMETRY ENGINE
+      else if (STATE.level === 1) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 01 // CODE, BINARY & DECISION MATRIX</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">Algorithmic Telemetry Engine</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/50 text-cyan-300 font-mono-code text-xs">SUBMIT IN TOP ADDRESS BAR</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Evaluate the Python telemetry formula, convert the resulting binary flag into Base-10, and filter the qualifying node from the decision matrix to construct your address-bar passkey.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <!-- Phase 1 -->
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-orbitron text-xs font-bold text-cyan-300 tracking-wider uppercase mb-3">PHASE 1 // PYTHON TELEMETRY SCRIPT</h3>
+                <pre class="bg-slate-950 border border-slate-800 rounded-lg p-3.5 font-mono-code text-xs text-sky-300 overflow-x-auto mb-3">def compute_output(fours, sixes, cycles):
+    score = (fours * 4) + (sixes * 6)
+    bonus = 4
+    if cycles <= 66:
+        return score + bonus
+    else:
+        return 0
+
+# Inputs: fours=13, sixes=9, cycles=66</pre>
+                <div class="flex gap-2">
+                  <input type="number" id="l1CodeInput" placeholder="Numeric output..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 font-mono-code text-sm text-cyan-300 outline-none focus:border-cyan-400" />
+                  <button onclick="checkL1Phase1()" class="px-4 py-2 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-xs cursor-pointer">RUN</button>
+                </div>
+                <p id="l1P1Msg" class="mt-2 font-mono-code text-xs text-emerald-400">${STATE.l1Phase1 ? '✔ Output 110 verified! Binary Gate unlocked.' : ''}</p>
+              </div>
+
+              <!-- Phase 2 -->
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-orbitron text-xs font-bold text-cyan-300 tracking-wider uppercase mb-3">PHASE 2 // BINARY GATE</h3>
+                <p class="text-xs text-slate-300 font-mono-code leading-relaxed mb-4">
+                  ${STATE.l1Phase1
+                    ? 'GATE ALERT: <span class="text-amber-300 font-bold">BASE-2 DETECTED (110)</span>. Base-10 integer required to override cipher lock.'
+                    : 'STATUS: Locked. Execute Phase 1 telemetry script to expose binary flag.'}
+                </p>
+                <div class="flex gap-2">
+                  <input type="number" id="l1BinInput" placeholder="Base-10 value..." ${STATE.l1Phase1 ? '' : 'disabled'} class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 font-mono-code text-sm text-cyan-300 outline-none focus:border-cyan-400 disabled:opacity-40" />
+                  <button onclick="checkL1Phase2()" ${STATE.l1Phase1 ? '' : 'disabled'} class="px-4 py-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-orbitron font-bold text-xs cursor-pointer disabled:opacity-40">OVERRIDE</button>
+                </div>
+                <p id="l1P2Msg" class="mt-2 font-mono-code text-xs text-emerald-400">${STATE.l1Phase2 ? '✔ Base-10 (6) confirmed! Trace Phase 3 node ID.' : ''}</p>
+              </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+              <h3 class="font-orbitron text-xs font-bold text-cyan-300 tracking-wider uppercase mb-2">PHASE 3 // NODE DECISION MATRIX</h3>
+              <p class="text-xs text-slate-400 font-mono-code mb-3">
+                BRANCH RULE: Select the node with Allocation &gt; 20.0 Cr that completed a 50-point burst in &le; 15 cycles. Navigate to <span class="text-cyan-300">/level/1/&lt;node_id&gt;</span> in the top address bar.
+              </p>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse font-mono-code text-xs">
+                  <thead>
+                    <tr class="bg-slate-950 text-cyan-300 border-b border-slate-800">
+                      <th class="p-2.5">NODE_ID</th>
+                      <th class="p-2.5">ALLOCATION</th>
+                      <th class="p-2.5">50-BURST CYCLES</th>
+                      <th class="p-2.5">BRANCH RESULT</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800">
+                    <tr><td class="p-2.5">aegis_v1</td><td class="p-2.5">18.50 Cr</td><td class="p-2.5">19 cycles</td><td class="p-2.5 text-rose-400">FAIL (Allocation &lt; 20)</td></tr>
+                    <tr><td class="p-2.5 text-emerald-300 font-bold">nova_prime</td><td class="p-2.5">20.50 Cr</td><td class="p-2.5">14 cycles</td><td class="p-2.5 text-emerald-400 font-bold">QUALIFIED</td></tr>
+                    <tr><td class="p-2.5">titan_x</td><td class="p-2.5">24.75 Cr</td><td class="p-2.5">22 cycles</td><td class="p-2.5 text-rose-400">FAIL (Cycles &gt; 15)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // LEVEL 02: MACHINE MEMORY ARCHIVE
+      else if (STATE.level === 2) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 02 // MEMORY ADDRESS DECODING</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">Machine Memory Archive</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/50 text-cyan-300 font-mono-code text-xs">SUBMIT IN TOP ADDRESS BAR</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Decode the four memory address values below into ASCII, then combine them with the operative codenames to build the route key. [ASCII values are hidden in this page.]
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-orbitron text-xs font-bold text-cyan-300 uppercase mb-3">OPERATIVE CODENAME MAPPING</h3>
+                <ul class="space-y-2 font-mono-code text-xs text-slate-300">
+                  <li>• <span class="text-amber-300">ADDR_0x01</span> → Numeric Prefix</li>
+                  <li>• <span class="text-amber-300">ADDR_0x02 ('J')</span> → Operative <span class="text-white font-bold">jolt</span></li>
+                  <li>• <span class="text-amber-300">ADDR_0x03 ('S')</span> → Operative <span class="text-white font-bold">shade</span></li>
+                  <li>• <span class="text-amber-300">ADDR_0x04</span> → Numeric Suffix</li>
+                </ul>
+                <div class="mt-4 p-3 rounded-lg bg-slate-950 border border-slate-800 font-mono-code text-xs text-emerald-400">
+                  ROUTE FORMAT: /level/2/&lt;b1&gt;_&lt;op2&gt;_&lt;op3&gt;_&lt;b4&gt;
+                </div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-orbitron text-xs font-bold text-cyan-300 uppercase mb-2">ASCII REFERENCE TABLE</h3>
+                <div class="text-xs font-mono-code text-slate-400 mb-3">
+                  DEC 48 = '0' &nbsp;|&nbsp; DEC 57 = '9' &nbsp;|&nbsp; DEC 74 = 'J' &nbsp;|&nbsp; DEC 83 = 'S'
+                </div>
+                <div class="stealth-buffer rounded-lg p-4 font-mono-code text-xs leading-loose">
+                  MEM_ADDR_0x01 :: BIN: 00111001 -&gt; DEC 57 -&gt; ASCII '9'<br/>
+                  MEM_ADDR_0x02 :: BIN: 01001010 -&gt; DEC 74 -&gt; ASCII 'J'<br/>
+                  MEM_ADDR_0x03 :: BIN: 01010011 -&gt; DEC 83 -&gt; ASCII 'S'<br/>
+                  MEM_ADDR_0x04 :: BIN: 00110000 -&gt; DEC 48 -&gt; ASCII '0'
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // LEVEL 03: SYSTEM AUTHENTICATION VAULT (DOM INSPECTION)
+      else if (STATE.level === 3) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 03 // DOM SOURCE INSPECTION</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">System Authentication Vault</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500 text-rose-300 font-mono-code text-xs font-bold">⚠ PENALTY: RESET TO L01</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Dossier #185 is sealed behind an HTML comment inside <code class="text-cyan-300">&lt;div class="lock-overlay"&gt;</code>. Inspect the DOM using your browser DevTools (<kbd class="px-1.5 py-0.5 rounded bg-slate-800 font-mono-code text-xs">F12</kbd> / Right-Click → Inspect) or the built-in source inspector to extract the passcode. <span class="text-rose-400 font-bold">WARNING:</span> A wrong DOM passcode or route key immediately resets your session to Level 01.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-orbitron text-xs font-bold text-cyan-300 uppercase mb-3">SECURITY PASSCODE INPUT</h3>
+                <input type="text" id="l3PassInput" placeholder="Enter DOM comment passcode..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 font-mono-code text-sm text-cyan-300 outline-none focus:border-cyan-400 mb-3" />
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="unlockL3Dossier()" class="px-4 py-2 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-xs cursor-pointer">
+                    UNLOCK DOSSIER
+                  </button>
+                  <button onclick="toggleL3Source()" class="px-3 py-2 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-mono-code text-xs cursor-pointer">
+                    &lt;/&gt; INSPECT DOM
+                  </button>
+                </div>
+                <pre id="l3SourceBox" class="hidden mt-3 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono-code text-xs text-slate-300 overflow-x-auto"><span class="text-cyan-300">&lt;div class="lock-overlay"&gt;</span>
+  <span class="text-amber-300 font-bold">&lt;!-- PASSCODE: 18_MAY_2096 --&gt;</span>
+  <span class="text-cyan-300">&lt;span&gt;</span>ENCRYPTED DOSSIER #185<span class="text-cyan-300">&lt;/span&gt;</span>
+<span class="text-cyan-300">&lt;/div&gt;</span></pre>
+              </div>
+
+              <div class="lock-overlay bg-slate-900/90 border ${STATE.l3Unlocked ? 'border-emerald-400/70' : 'border-slate-800'} rounded-xl p-5">
+                <!-- PASSCODE: 18_MAY_2096 -->
+                <h3 class="font-orbitron text-xs font-bold ${STATE.l3Unlocked ? 'text-emerald-400' : 'text-amber-300'} uppercase mb-3">
+                  ${STATE.l3Unlocked ? '✔ DOSSIER #185 // DECRYPTED' : '🔒 ENCRYPTED DOSSIER #185'}
+                </h3>
+                ${STATE.l3Unlocked ? `
+                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-3">
+                    <b>SECURITY INCIDENT (18 MAY 2096):</b> Firewall congestion forced Sector-07 mainframe nodes to throttle the standard <span class="text-cyan-300 font-bold">1024-bit</span> encryption key down by <span class="text-emerald-300 font-bold">768-bit security</span>.
+                  </p>
+                  <p class="font-mono-code text-xs text-cyan-300">
+                    FINAL QUESTION: How many bits was the encryption key reduced to? Navigate to <span class="font-bold">/level/3/&lt;answer&gt;</span> in the address bar.
+                  </p>
+                ` : `
+                  <p class="text-xs text-slate-400 font-mono-code leading-relaxed">
+                    Awaiting security passcode from DOM comment inside <code>div.lock-overlay</code>...
+                  </p>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // LEVEL 04: THE INTERFACE LIES (180-DEGREE INVERSION + RIGHT-CLICK OVERRIDE)
+      else if (STATE.level === 4) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8 ${STATE.l4LoopBroken ? 'upright-stage' : 'inverted-stage'}">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 04 // INVERTED DISPLAY & CONTEXT TRAP</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">The Interface Lies</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/50 text-cyan-300 font-mono-code text-xs">SUBMIT IN TOP ADDRESS BAR</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-5">
+              ${STATE.l4LoopBroken
+                ? '<span class="text-emerald-400 font-bold">SYSTEM LOOP BROKEN!</span> Display orientation restored. Identify the two memory chips and enter <code class="text-cyan-300">ram_rom</code> in the address bar.'
+                : 'DISPLAY CORRUPTION: Viewport rotated 180°. The 180° rotation button is a decoy. Do not click the red warning box; right-click it (or use a two-finger tap) to open the override menu.'}
+            </p>
+
+            <div
+              oncontextmenu="openL4Context(event)"
+              class="my-5 p-4 rounded-xl bg-rose-500/15 border-2 border-rose-400 text-rose-300 font-mono-code font-bold text-center text-sm tracking-wider cursor-pointer select-none hover:bg-rose-500/20 transition"
+            >
+              [ CRITICAL LOOP ERROR // DO NOT CLICK THIS BUTTON ]
+            </div>
+
+            <div class="my-5 text-center">
+              <button type="button" class="px-6 py-3 rounded-lg bg-slate-900 border border-rose-500/60 text-rose-300 font-orbitron font-bold text-xs tracking-widest cursor-pointer">
+                ROTATE 180°
+              </button>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+              <h3 class="font-orbitron text-xs font-bold text-cyan-300 uppercase mb-2">NEW LEVEL 04 RIDDLE (COMPUTER HARDWARE)</h3>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Two memory chips control this terminal's core. The first holds your active workspace, yet forgets everything the instant the power goes out. The second holds the permanent boot instructions, yet cannot be rewritten by standard commands. Enter <code class="text-cyan-300">&lt;first&gt;_&lt;second&gt;</code> in lowercase in the address bar.
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      // LEVEL 05: ENCRYPTED TACTICAL INTERCEPT (DEMOTION RISK)
+      else if (STATE.level === 5) {
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-6 sm:p-8 border-rose-500/40">
+            <div class="flex flex-wrap items-start justify-between gap-4 pb-4 mb-5 border-b border-slate-800">
+              <div>
+                <div class="font-mono-code text-xs text-cyan-400 tracking-widest uppercase mb-1">LEVEL 05 // CAESAR SHIFT DECRYPTION</div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white">Encrypted Tactical Intercept</h1>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500 text-rose-300 font-mono-code text-xs font-bold">⚠ PENALTY: RESET TO L01</span>
+            </div>
+
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              Decode the ciphertext and add the numeric values of its letters using A=0, B=1, through Z=25. <span class="text-rose-400 font-bold">WARNING:</span> A wrong answer immediately demotes your session back to Level 01.
+            </p>
+
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5">
+              <h3 class="font-orbitron text-xs font-bold text-cyan-300 uppercase mb-2">CAESAR CIPHER // SHIFT -4</h3>
+              <p class="text-xs text-slate-300 mb-3">The ciphertext DKQOA was shifted forward by 4. Decode it. What is the sum of the decoded letters’ numbers?</p>
+              <div class="flex gap-2">
+                <input type="number" id="l5CipherInput" placeholder="Enter letter-value sum..." ${STATE.l5CipherDone ? 'disabled' : ''} class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 font-mono-code text-sm text-cyan-300 outline-none" />
+                <button onclick="verifyL5Cipher()" ${STATE.l5CipherDone ? 'disabled' : ''} class="px-4 py-2 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-xs cursor-pointer">VERIFY</button>
+              </div>
+              ${STATE.l5CipherDone ? `
+                <div class="mt-3 p-3 rounded-lg bg-slate-950 border border-emerald-500/40 font-mono-code text-xs text-emerald-300">
+                  DECODED: <b>HOUSE</b> :: A=0 VALUES: 7 + 14 + 20 + 18 + 4 = <b>63</b>
+                </div>
+              ` : ''}
+            </div>
+
+            ${STATE.l5CipherDone ? `
+              <div class="mt-5 p-4 rounded-xl bg-emerald-500/10 border border-emerald-400 font-mono-code text-xs sm:text-sm text-emerald-300">
+                ✔ CIPHERTEXT DECODED! Navigate to <span class="font-bold underline">/level/5/63</span> in the top address bar.
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      // VICTORY SUMMARY SCREEN
+      else if (STATE.level === 6) {
+        STATE.timerRunning = false;
+        const m = String(Math.floor(STATE.seconds / 60)).padStart(2, '0');
+        const s = String(STATE.seconds % 60).padStart(2, '0');
+
+        root.innerHTML = `
+          <div class="cyber-card rounded-2xl p-8 sm:p-10 border-2 border-emerald-400 text-center">
+            <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400 text-emerald-300 font-mono-code text-xs tracking-widest uppercase mb-3">
+              /VICTORY // SUPREME ARCHITECT CLEARANCE GRANTED
+            </div>
+            <h1 class="font-orbitron text-3xl sm:text-5xl font-black neon-green mb-4">
+              NEXUS MAINFRAME LIBERATED
+            </h1>
+            <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-8">
+              Outstanding work, Analyst. You cleared all six security layers, decoded the memory buffer, inspected the DOM vault, broke the inverted screen loop, and solved the final intelligence intercept.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mb-8 font-mono-code">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
+                <div class="text-xs text-slate-400 mb-1">TOTAL MISSION TIME</div>
+                <div class="text-2xl font-bold text-cyan-300">${m}:${s}</div>
+              </div>
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
+                <div class="text-xs text-slate-400 mb-1">DEMOTION PENALTIES</div>
+                <div class="text-2xl font-bold ${STATE.demotions === 0 ? 'text-emerald-400' : 'text-amber-300'}">${STATE.demotions}</div>
+              </div>
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
+                <div class="text-xs text-slate-400 mb-1">LAYERS CLEARED</div>
+                <div class="text-2xl font-bold text-emerald-400">6 / 6</div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3">
+              <button onclick="resetFullGame()" class="px-7 py-3.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-black text-xs tracking-widest uppercase cursor-pointer">
+                PLAY NEW MISSION
+              </button>
+              <button onclick="showLobby()" class="px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-orbitron font-bold text-xs tracking-widest uppercase cursor-pointer">
+                RETURN TO LOBBY
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // 6. PUZZLE INTERACTION HANDLERS
+    // =========================================================================
+    function authenticateL0() {
+      const key = document.getElementById('l0BootKeyInput').value.trim().toUpperCase();
+      if (key === 'WELCOME_TO_PUZZLE') {
+        SFX.success();
+        showModal(`
+          <div class="font-mono-code text-xs text-emerald-400 uppercase tracking-widest mb-1">✔ TRANSMISSION AUTHENTICATED</div>
+          <h2 class="font-orbitron text-xl font-black text-white mb-3">BEGIN MISSION</h2>
+          <p class="text-sm text-slate-300 leading-relaxed mb-5">Boot key accepted. Begin the mission at Level 01.</p>
+          <button onclick="closeModal(); goToLevel(1);" class="w-full py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-orbitron font-black text-xs tracking-widest uppercase cursor-pointer">
+            BEGIN MISSION (LEVEL 01) →
+          </button>
+        `);
+      } else {
+        SFX.error();
+        showToast("BOOT KEY NOT FOUND // Inspect the page for the hidden location.", "#ff3355");
+      }
+    }
+
+    function checkL1Phase1() {
+      const val = Number(document.getElementById('l1CodeInput').value);
+      if (val === 110) {
+        SFX.success();
+        STATE.l1Phase1 = true;
+        renderLevel();
+      } else {
+        SFX.error();
+        showToast("Incorrect output! Calculate (13 * 4) + (9 * 6) + 4.", "#ff3355");
+      }
+    }
+
+    function checkL1Phase2() {
+      const val = Number(document.getElementById('l1BinInput').value);
+      if (val === 6) {
+        SFX.success();
+        STATE.l1Phase2 = true;
+        renderLevel();
+        showToast("Binary Gate Overridden! Type 'nova_prime' in the top address bar.", "#00ff88");
+      } else {
+        SFX.error();
+        showToast("Binary 110 equals (1 * 4) + (1 * 2) + 0.", "#ff3355");
+      }
+    }
+
+    function toggleL3Source() {
+      SFX.click();
+      const box = document.getElementById('l3SourceBox');
+      box.classList.toggle('hidden');
+    }
+
+    function unlockL3Dossier() {
+      const code = document.getElementById('l3PassInput').value.trim().toUpperCase();
+      if (code === '18_MAY_2096') {
+        SFX.success();
+        STATE.l3Unlocked = true;
+        renderLevel();
+        showToast("Dossier #185 decrypted!", "#00ff88");
+      } else {
+        triggerDemotion("Incorrect DOM passcode! Inspect the dossier comment and enter 18_MAY_2096.");
+      }
+    }
+
+    function openL4Context(e) {
+      e.preventDefault();
+      SFX.click();
+      const menu = document.getElementById('customContext');
+      menu.style.left = Math.min(e.clientX, window.innerWidth - 240) + 'px';
+      menu.style.top = Math.min(e.clientY, window.innerHeight - 130) + 'px';
+      menu.style.display = 'block';
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('customContext').style.display = 'none';
+    });
+
+    function contextInspect() {
+      SFX.click();
+      showToast("DOM Node: <div class='trap-bar'> — Try 'Break the System Loop'!", "#ffb800");
+    }
+
+    function contextReload() {
+      SFX.click();
+      showToast("Frame reload blocked by temporal loop.", "#ffb800");
+    }
+
+    function breakSystemLoop() {
+      SFX.success();
+      STATE.l4LoopBroken = true;
+      renderLevel();
+      showToast("System loop broken! Screen restored upright.", "#00ff88");
+    }
+
+    function verifyL5Cipher() {
+      const val = document.getElementById('l5CipherInput').value.trim();
+      if (val === '63') {
+        SFX.success();
+        STATE.l5CipherDone = true;
+        renderLevel();
+      } else {
+        triggerDemotion("Incorrect letter-value sum! Decode DKQOA by shifting each letter forward four places, then add the A=0 values.");
+      }
+    }
+
+    function resetFullGame() {
+      startMission(0);
+    }
+
+    // Boot Website into Landing Lobby
+    renderEntry();
+  </script>
+</body>
+</html>
